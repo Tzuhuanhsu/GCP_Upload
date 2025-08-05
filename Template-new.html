@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>(新連線架構)遊戲列表測試</title>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css'
+		integrity='sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=='
+		crossorigin='anonymous' />
+	<style>
+		body {
+			background-color: #333;
+		}
+
+		iframe {
+			width: 100%;
+			height: 100%;
+		}
+
+		.mainSection {
+			margin: 2.5%;
+			padding-top: 1%;
+		}
+
+		.card {
+			margin: 25px;
+			background-color: #333;
+			color: white;
+			border: .2rem solid #FFC107;
+			position: relative;
+			box-shadow: #fff .5rem .5rem 0;
+			padding: 1% 0.5% 1% 0%;
+		}
+
+		.imgElement {
+			object-fit: cover;
+		}
+
+		.title {
+			color: white;
+			font-weight: 900;
+			font-size: 150%;
+			filter: drop-shadow(0 0 0.2rem #000);
+			position: absolute;
+			bottom: -55px;
+			width: 100%;
+			text-align: center;
+		}
+
+		.card-body {
+			display: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			transform: translate(50%, 50%);
+			transition: 1s;
+		}
+
+		.card:hover .imgElement {
+			filter: brightness(50%);
+			transition: 1s;
+		}
+
+		.card:hover .card-body {
+			width: auto;
+			margin-left: 1%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			transition: 1s;
+		}
+
+		.gameListContainer {
+			display: flex;
+			flex-wrap: wrap;
+		}
+
+		.btn {
+			--bs-btn-padding-x: 1.5rem;
+			--bs-btn-padding-y: 0.375rem;
+			--bs-btn-font-family: ;
+			--bs-btn-font-size: 1rem;
+			--bs-btn-font-weight: 400;
+			--bs-btn-line-height: 1.5;
+			--bs-btn-color: var(--bs-body-color);
+			--bs-btn-bg: transparent;
+			--bs-btn-border-width: var(--bs-border-width);
+			--bs-btn-border-color: transparent;
+			--bs-btn-border-radius: var(--bs-border-radius);
+			--bs-btn-hover-border-color: transparent;
+			--bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+			--bs-btn-disabled-opacity: 0.65;
+			--bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+			display: inline-block;
+			padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+			font-family: var(--bs-btn-font-family);
+			font-size: var(--bs-btn-font-size);
+			font-weight: var(--bs-btn-font-weight);
+			line-height: var(--bs-btn-line-height);
+			color: var(--bs-btn-color);
+			text-align: center;
+			text-decoration: none;
+			vertical-align: middle;
+			cursor: pointer;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			user-select: none;
+			border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+			border-radius: var(--bs-btn-border-radius);
+			background-color: var(--bs-btn-bg);
+			transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+		}
+
+		.btn-primary {
+			--bs-btn-color: #fff;
+			--bs-btn-bg: #0d6efd;
+			--bs-btn-border-color: #0d6efd;
+			--bs-btn-hover-color: #fff;
+			--bs-btn-hover-bg: #0b5ed7;
+			--bs-btn-hover-border-color: #0a58ca;
+			--bs-btn-focus-shadow-rgb: 49, 132, 253;
+			--bs-btn-active-color: #fff;
+			--bs-btn-active-bg: #0a58ca;
+			--bs-btn-active-border-color: #0a53be;
+			--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+			--bs-btn-disabled-color: #fff;
+			--bs-btn-disabled-bg: #0d6efd;
+			--bs-btn-disabled-border-color: #0d6efd;
+		}
+
+		.my-2 {
+			margin-top: .5rem !important;
+			margin-bottom: .5rem !important;
+		}
+
+		.btn-light {
+			--bs-btn-color: #000;
+			--bs-btn-bg: #f8f9fa;
+			--bs-btn-border-color: #f8f9fa;
+			--bs-btn-hover-color: #000;
+			--bs-btn-hover-bg: #d3d4d5;
+			--bs-btn-hover-border-color: #c6c7c8;
+			--bs-btn-focus-shadow-rgb: 211, 212, 213;
+			--bs-btn-active-color: #000;
+			--bs-btn-active-bg: #c6c7c8;
+			--bs-btn-active-border-color: #babbbc;
+			--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+			--bs-btn-disabled-color: #000;
+			--bs-btn-disabled-bg: #f8f9fa;
+			--bs-btn-disabled-border-color: #f8f9fa;
+		}
+
+		select {
+			margin-bottom: 10px;
+			margin-top: 10px;
+			outline: 0;
+			background: #f5f6f5;
+			color: #000000;
+			border: 1px solid crimson;
+			padding: 4px;
+			border-radius: 9px;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="navbar bg-warning">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">首頁</a>
+			<!-- 選擇語系 -->
+			<select id="Language">
+				<option value="tw">請選擇語系(預設中文)</option>
+				<option value="tw">tw</option>
+				<option value="en">en</option>
+				<option value="cn">cn</option>
+				<option value="vn">vn</option>
+				<option value="jp">jp</option>
+				<option value="th">th</option>
+				<option value="es">es</option>
+				<option value="kr">kr</option>
+			</select>
+		</div>
+	</nav>
+
+	<div class="mainSection">
+		<h3 class="text-white">(新連線架構)遊戲列表</h3>
+		<div id="gameListContainer" class="gameListContainer"></div>
+	</div>
+
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js'
+		integrity='sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=='
+		crossorigin='anonymous'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js'
+		integrity='sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ=='
+		crossorigin='anonymous'></script>
+	<script>
+
+		const hostname = window.location.hostname;
+		console.log(`[${new Date().toLocaleString()}] hostname: ${hostname}`);
+		const protocol = window.location.protocol;
+		const link = `https://dev-api.apex-win.com/0/api/game/link`;
+		const demoLink = `https://dev-api.apex-win.com/0/api/game/demo/link`;
+		{ ReplaceNewUrl }
+
+		const searchUrl = async (game_code, isFree) =>
+		{
+			try
+			{
+				const data = {
+					game_code: game_code,
+					lang: "tw"
+				}
+				const url = isFree ? demoLink : link
+				console.log(`[${new Date().toLocaleString()}] URL: ${url}, Request: ${JSON.stringify(data)}`)
+				return await axios({
+					method: 'post',
+					url: url,
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					data: data,
+				}
+				).then((res) =>
+				{
+					if (res.status !== 200)
+					{
+						throw new Error('請求失敗');
+					}
+					console.log(`[${new Date().toLocaleString()}] Response: ${JSON.stringify(res.data)}`);
+
+					return res.data.url;
+				})
+			} catch (error)
+			{
+				console.log(error);
+				alert(`發生錯誤，請稍後再試 ${error.message}`);
+			}
+		}
+
+		const onClickBtn = async (game_code, isFree, url) =>
+		{
+			const game = gameList.find(game => game.game_code === game_code);
+			console.log(`[${new Date().toLocaleString()}] click game: ${JSON.stringify(game)}`)
+			const res = await searchUrl(game.game_code, isFree);
+
+			if (url != "undefined")
+			{
+				const split = res.split('?');
+				const newUrl = url + `${getQueryString(split.pop())}`;
+				console.log("New URL: ", newUrl);
+				getQueryString(newUrl);
+				document.getElementById(`iframe${game_code}`).src = newUrl;
+			}
+			else
+			{
+				const split = res.split('?');
+				const newUrl = split[ 0 ] + `?${getQueryString(split[ 1 ])}`;
+				document.getElementById(`iframe${game_code}`).src = newUrl;
+			}
+
+		}
+
+		//重新設定QueryString
+		function getQueryString(url)
+		{
+			let newQueryString = "";
+			const split = url.split('?');
+			const query = split.pop().split('&');
+			for (let element of query)
+			{
+				let subElement = element.split('=');
+				if (subElement[ 0 ] == "lang")
+				{
+					//讀取語系
+					const languageSelect = document.getElementById('Language');
+					const language = languageSelect.options[ languageSelect.selectedIndex ].value;
+					subElement[ 1 ] = language;
+					element = `${subElement[ 0 ]}=${subElement[ 1 ]}`
+				}
+				newQueryString += `${element}&`;
+			}
+			return newQueryString;
+		}
+
+		function renderGameList()
+		{
+			const container = document.getElementById('gameListContainer');
+
+			gameList.map(game =>
+			{
+				const gameCardHTML = `
+      <div class="card col-4" style="width: 18rem;" data-bs-toggle="modal"
+          data-bs-target="#exampleModal-${game.game_code}">
+        <img class="imgElement object-fit-fill" src="${game.img}" alt="Card image">
+        <h5 class="title">${game.title}</h5>
+        <div class="card-body">
+          <button type="button" class="my-2 btn btn-primary" onclick="onClickBtn('${game.game_code}', false, '${game.url}')">遊玩</button>
+          <button type="button" class="my-2 btn btn-light" onclick="onClickBtn('${game.game_code}', true, '${game.url}')">免費遊玩</button>
+        </div>
+
+     <div class="modal fade" id="exampleModal-${game.game_code}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+       <div class="modal-content">
+        <div class="border p-1">
+
+		</div>
+        <div class="modal-body">
+         <iframe id="iframe${game.game_code}" src="" frameborder="0"></iframe>
+        </div>
+       </div>
+      </div>
+     </div>
+      </div>
+    `;
+				container.innerHTML += gameCardHTML;
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', renderGameList);
+		//			<button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">＜ 回到首頁</button>
+	</script>
+</body>
+
+</html>
